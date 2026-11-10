@@ -1,0 +1,42 @@
+---
+title: "AI Use and Verification"
+description: "A concise record of AI-supported work on this project."
+author: "Monte Gardiner, Korbin Kelly, Davis Paxton"
+---
+
+This page is a work log, not a second report. Short bullets are welcome. It is separate from the final case study and does not count toward the 750 to 1,000 word range.
+
+## Starting point
+
+**AI system and date:** ChatGPT (GPT-4), October 2026; Gemini, October 2026.
+
+Before using AI for the required extension, our question was: does BMI have a threshold beyond which medical insurance charges rise faster, and does that threshold differ for smokers versus nonsmokers? Our baseline model was a multiple linear regression of charges on BMI, smoking status, and age. The baseline showed that a one-unit increase in BMI is associated with about $323 higher charges (95% CI: $269–$377), but it assumes one constant slope for everyone and can't detect a threshold or interaction with smoking status.
+
+## Substantive prompts
+
+> Between these three datasets, what might have more questions that we could ask within the scope of this project based solely off of the features and summaries included in the dataset? Ensure reliability and reproducibility.
+
+> Based off of this code that I am running and the dataset that we are using (insurance, smoking, bmi), do the statistics that we are calculating make sense in the context of the problem? Without looking at the data or the problem statement in depth, does it seem reasonable to assume that our predictors are linearly related to our response variable?
+
+## My decisions
+
+- **Accepted:** We decided to go with the insurance dataset because it had a higher correlation between the predictors and the response variable.
+- **Changed:** We initially looked at whether mean charges increase linearly with smoking, and that was way too obvious. We tightened the scope to focus on a BMI threshold and whether that threshold differs by smoking status.
+- **Rejected or corrected:** We rejected suggestions to immediately jump to interactions or complex models. We also flagged several AI outputs as hallucinations and went back to the data ourselves to verify.
+
+**Proposed extension:** Piecewise linear regression to detect whether there is a BMI breakpoint above which charges increase faster, with the breakpoint potentially differing for smokers and nonsmokers.
+
+**Connection to the final case study:** The extension will appear in the "Going beyond the baseline" section and will be compared directly to the baseline straight-line model.
+
+## Independent verification
+
+1. **Check 1:** Visually inspect the fitted piecewise model against a loess smoother to confirm the detected breakpoint aligns with what the data show graphically.
+2. **Check 2:** Compare AIC/BIC and residual standard error of the piecewise model against the baseline to confirm it actually fits better before reporting the threshold as meaningful.
+
+## Remaining limitation
+
+The dataset's exact collection process is undocumented, so "charges" may not mean the same thing across observations. We also can't rule out confounding and that means that it is possible that people with higher BMI may differ in other unmeasured ways that drive costs.
+
+## Other AI use, if any
+
+ChatGPT was used for dataset comparison during the proposal phase and some R code autocomplete. Gemini was used for sanity checks during EDA and model fitting.

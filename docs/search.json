@@ -1,0 +1,100 @@
+[
+  {
+    "objectID": "ai-use.html",
+    "href": "ai-use.html",
+    "title": "AI Use and Verification",
+    "section": "",
+    "text": "This page is a work log, not a second report. Short bullets are welcome. It is separate from the final case study and does not count toward the 750 to 1,000 word range."
+  },
+  {
+    "objectID": "ai-use.html#starting-point",
+    "href": "ai-use.html#starting-point",
+    "title": "AI Use and Verification",
+    "section": "Starting point",
+    "text": "Starting point\nAI system and date: ChatGPT (GPT-4), October 2026; Gemini, October 2026.\nBefore using AI for the required extension, our question was: does BMI have a threshold beyond which medical insurance charges rise faster, and does that threshold differ for smokers versus nonsmokers? Our baseline model was a multiple linear regression of charges on BMI, smoking status, and age. The baseline showed that a one-unit increase in BMI is associated with about $323 higher charges (95% CI: $269–$377), but it assumes one constant slope for everyone and can’t detect a threshold or interaction with smoking status."
+  },
+  {
+    "objectID": "ai-use.html#substantive-prompts",
+    "href": "ai-use.html#substantive-prompts",
+    "title": "AI Use and Verification",
+    "section": "Substantive prompts",
+    "text": "Substantive prompts\n\nBetween these three datasets, what might have more questions that we could ask within the scope of this project based solely off of the features and summaries included in the dataset? Ensure reliability and reproducibility.\n\n\nBased off of this code that I am running and the dataset that we are using (insurance, smoking, bmi), do the statistics that we are calculating make sense in the context of the problem? Without looking at the data or the problem statement in depth, does it seem reasonable to assume that our predictors are linearly related to our response variable?"
+  },
+  {
+    "objectID": "ai-use.html#my-decisions",
+    "href": "ai-use.html#my-decisions",
+    "title": "AI Use and Verification",
+    "section": "My decisions",
+    "text": "My decisions\n\nAccepted: We decided to go with the insurance dataset because it had a higher correlation between the predictors and the response variable.\nChanged: We initially looked at whether mean charges increase linearly with smoking, and that was way too obvious. We tightened the scope to focus on a BMI threshold and whether that threshold differs by smoking status.\nRejected or corrected: We rejected suggestions to immediately jump to interactions or complex models. We also flagged several AI outputs as hallucinations and went back to the data ourselves to verify.\n\nProposed extension: Piecewise linear regression to detect whether there is a BMI breakpoint above which charges increase faster, with the breakpoint potentially differing for smokers and nonsmokers.\nConnection to the final case study: The extension will appear in the “Going beyond the baseline” section and will be compared directly to the baseline straight-line model."
+  },
+  {
+    "objectID": "ai-use.html#independent-verification",
+    "href": "ai-use.html#independent-verification",
+    "title": "AI Use and Verification",
+    "section": "Independent verification",
+    "text": "Independent verification\n\nCheck 1: Visually inspect the fitted piecewise model against a loess smoother to confirm the detected breakpoint aligns with what the data show graphically.\nCheck 2: Compare AIC/BIC and residual standard error of the piecewise model against the baseline to confirm it actually fits better before reporting the threshold as meaningful."
+  },
+  {
+    "objectID": "ai-use.html#remaining-limitation",
+    "href": "ai-use.html#remaining-limitation",
+    "title": "AI Use and Verification",
+    "section": "Remaining limitation",
+    "text": "Remaining limitation\nThe dataset’s exact collection process is undocumented, so “charges” may not mean the same thing across observations. We also can’t rule out confounding and that means that it is possible that people with higher BMI may differ in other unmeasured ways that drive costs."
+  },
+  {
+    "objectID": "ai-use.html#other-ai-use-if-any",
+    "href": "ai-use.html#other-ai-use-if-any",
+    "title": "AI Use and Verification",
+    "section": "Other AI use, if any",
+    "text": "Other AI use, if any\nChatGPT was used for dataset comparison during the proposal phase and some R code autocomplete. Gemini was used for sanity checks during EDA and model fitting."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "BMI Thresholds and Medical Insurance Charges",
+    "section": "",
+    "text": "Is there a BMI threshold beyond which medical insurance charges increase more quickly, and does that pattern differ for smokers versus nonsmokers? This matters to healthcare analysts and insurers trying to understand what actually drives cost variation, so not just whether BMI matters, but how it matters.\nWe used the Medical Insurance Costs dataset from Kaggle. Each row is one person. There are 1,338 observations and seven variables: charges (in dollars), age, sex, BMI, children, smoker, and region. The original data collection process and the exact meaning of “charges” aren’t clearly documented, so we can’t make causal claims and the sample may not represent the broader population."
+  },
+  {
+    "objectID": "index.html#the-question",
+    "href": "index.html#the-question",
+    "title": "BMI Thresholds and Medical Insurance Charges",
+    "section": "",
+    "text": "Is there a BMI threshold beyond which medical insurance charges increase more quickly, and does that pattern differ for smokers versus nonsmokers? This matters to healthcare analysts and insurers trying to understand what actually drives cost variation, so not just whether BMI matters, but how it matters.\nWe used the Medical Insurance Costs dataset from Kaggle. Each row is one person. There are 1,338 observations and seven variables: charges (in dollars), age, sex, BMI, children, smoker, and region. The original data collection process and the exact meaning of “charges” aren’t clearly documented, so we can’t make causal claims and the sample may not represent the broader population."
+  },
+  {
+    "objectID": "index.html#what-the-baseline-shows",
+    "href": "index.html#what-the-baseline-shows",
+    "title": "BMI Thresholds and Medical Insurance Charges",
+    "section": "What the baseline shows",
+    "text": "What the baseline shows\n[Analysis coming — this section will be completed before the final submission.]\n\n\nShow code\n# Load packages and data, fit the baseline model.\nlibrary(tidyverse)\ninsurance &lt;- read.csv(\"../insurance.csv\")\nbase_model &lt;- lm(charges ~ bmi + smoker + age, data = insurance)\nround(coef(summary(base_model)), 2)\n\n\n             Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept) -11676.83     937.57  -12.45        0\nbmi            322.62      27.49   11.74        0\nsmokeryes    23823.68     412.87   57.70        0\nage            259.55      11.93   21.75        0\n\n\nShow code\nround(confint(base_model), 2)\n\n\n                2.5 %   97.5 %\n(Intercept) -13516.10 -9837.56\nbmi            268.69   376.54\nsmokeryes    23013.75 24633.62\nage            236.14   282.96\n\n\n\n\nShow code\nggplot(insurance, aes(x = bmi, y = charges, color = smoker)) +\n  geom_point(alpha = 0.35) +\n  geom_smooth(method = \"loess\", se = FALSE) +\n  scale_color_manual(values = c(\"no\" = \"#0072B2\", \"yes\" = \"#D55E00\")) +\n  labs(\n    title = \"BMI and Medical Insurance Charges by Smoking Status\",\n    x = \"BMI (kg/m²)\",\n    y = \"Medical insurance charges ($)\",\n    color = \"Smoker\"\n  ) +\n  theme_minimal()"
+  },
+  {
+    "objectID": "index.html#going-beyond-the-baseline",
+    "href": "index.html#going-beyond-the-baseline",
+    "title": "BMI Thresholds and Medical Insurance Charges",
+    "section": "Going beyond the baseline",
+    "text": "Going beyond the baseline\n\nDoes a BMI threshold fit better than a straight line?\n[Analysis coming — piecewise linear models will be compared here.]\n\n\nShow code\n# Piecewise / segmented regression code will go here.\n\n\n\n\nDoes the BMI pattern differ between smokers and nonsmokers?\n[Analysis coming — interaction models will be explored here.]\n\n\nShow code\n# Interaction model code will go here."
+  },
+  {
+    "objectID": "index.html#a-new-direction-with-ai",
+    "href": "index.html#a-new-direction-with-ai",
+    "title": "BMI Thresholds and Medical Insurance Charges",
+    "section": "A new direction with AI",
+    "text": "A new direction with AI\n[Analysis coming — the AI-supported extension will be described and shown here.]\n\n\nShow code\n# AI extension implementation will go here.\n\n\nDetails are in the AI-use record."
+  },
+  {
+    "objectID": "index.html#what-this-means",
+    "href": "index.html#what-this-means",
+    "title": "BMI Thresholds and Medical Insurance Charges",
+    "section": "What this means",
+    "text": "What this means\n[Conclusions coming — this will be completed before the final submission.]"
+  },
+  {
+    "objectID": "index.html#data-and-code",
+    "href": "index.html#data-and-code",
+    "title": "BMI Thresholds and Medical Insurance Charges",
+    "section": "Data and code",
+    "text": "Data and code\n\nData: Medical Insurance Costs dataset, publicly available on Kaggle (Miri Choi, 2018).\nRepository: Stat330PortfolioProject\nAI-use record\nOther sources: R Core Team, ggplot2 (Wickham, 2016)."
+  }
+]

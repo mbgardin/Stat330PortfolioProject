@@ -1,0 +1,79 @@
+---
+title: "BMI Thresholds and Medical Insurance Charges"
+subtitle: "Does the relationship between BMI and insurance costs change at a threshold, and does it differ for smokers?"
+author: "Monte Gardiner, Korbin Kelly, Davis Paxton"
+date: last-modified
+description: "An analysis of whether BMI has a threshold effect on medical insurance charges, and whether that effect differs by smoking status."
+---
+
+## The question
+
+Is there a BMI threshold beyond which medical insurance charges increase more quickly, and does that pattern differ for smokers versus nonsmokers? This matters to healthcare analysts and insurers trying to understand what actually drives cost variation, so not just whether BMI matters, but *how* it matters.
+
+We used the [Medical Insurance Costs dataset](https://www.kaggle.com/datasets/mirichoi0218/insurance) from Kaggle. Each row is one person. There are 1,338 observations and seven variables: charges (in dollars), age, sex, BMI, children, smoker, and region. The original data collection process and the exact meaning of "charges" aren't clearly documented, so we can't make causal claims and the sample may not represent the broader population.
+
+## What the baseline shows
+
+**[Analysis coming — this section will be completed before the final submission.]**
+
+```{r}
+# Load packages and data, fit the baseline model.
+library(tidyverse)
+insurance <- read.csv("../insurance.csv")
+base_model <- lm(charges ~ bmi + smoker + age, data = insurance)
+round(coef(summary(base_model)), 2)
+round(confint(base_model), 2)
+```
+
+```{r}
+ggplot(insurance, aes(x = bmi, y = charges, color = smoker)) +
+  geom_point(alpha = 0.35) +
+  geom_smooth(method = "loess", se = FALSE) +
+  scale_color_manual(values = c("no" = "#0072B2", "yes" = "#D55E00")) +
+  labs(
+    title = "BMI and Medical Insurance Charges by Smoking Status",
+    x = "BMI (kg/m²)",
+    y = "Medical insurance charges ($)",
+    color = "Smoker"
+  ) +
+  theme_minimal()
+```
+
+## Going beyond the baseline
+
+### Does a BMI threshold fit better than a straight line?
+
+**[Analysis coming — piecewise linear models will be compared here.]**
+
+```{r}
+# Piecewise / segmented regression code will go here.
+```
+
+### Does the BMI pattern differ between smokers and nonsmokers?
+
+**[Analysis coming — interaction models will be explored here.]**
+
+```{r}
+# Interaction model code will go here.
+```
+
+## A new direction with AI
+
+**[Analysis coming — the AI-supported extension will be described and shown here.]**
+
+```{r}
+# AI extension implementation will go here.
+```
+
+Details are in the [AI-use record](ai-use.qmd).
+
+## What this means
+
+**[Conclusions coming — this will be completed before the final submission.]**
+
+## Data and code
+
+- **Data:** [Medical Insurance Costs dataset](https://www.kaggle.com/datasets/mirichoi0218/insurance), publicly available on Kaggle (Miri Choi, 2018).
+- **Repository:** [Stat330PortfolioProject](https://github.com/mbgardin/Stat330PortfolioProject.git)
+- [AI-use record](ai-use.qmd)
+- **Other sources:** R Core Team, ggplot2 (Wickham, 2016).
