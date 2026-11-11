@@ -1,7 +1,7 @@
 ---
 title: "BMI Thresholds and Medical Insurance Charges"
 subtitle: "Does the relationship between BMI and insurance costs change at a threshold, and does it differ for smokers?"
-author: "Monte Gardiner, Korbin Kelly, Davis Paxton"
+author: "Monte Gardiner, Korbin Kelley, Davis Paxton"
 date: last-modified
 description: "An analysis of whether BMI has a threshold effect on medical insurance charges, and whether that effect differs by smoking status."
 ---
